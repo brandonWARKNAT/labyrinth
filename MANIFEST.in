@@ -1,0 +1,4 @@
+recursive-include labyrinth/public *
+include labyrinth/public/favicon.ico
+recursive-include labyrinth/i18n *
+recursive-include labyrinth/templates *
