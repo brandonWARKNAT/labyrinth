@@ -38,14 +38,15 @@ class Cell(object):
 
 	def check_if_cell_is_node(self):
 		
-		up_cell = Cell.get_cell(self.coordinate_x, (self.coordinate_y - 1)) 
+		up_cell = Cell.get_cell(self.coordinate_x, self.coordinate_y - 1) 
 
 		right_cell = Cell.get_cell(self.coordinate_x + 1, self.coordinate_y)
 
 		down_cell = Cell.get_cell(self.coordinate_x, self.coordinate_y + 1)
 
 		left_cell = Cell.get_cell(self.coordinate_x - 1, self.coordinate_y)
-			# 1																									#2
+		
+		# 1									False																#2False
 		if ((up_cell and up_cell.terrain_type == 'path' and down_cell and down_cell.terrain_type == 'path') and (not left_cell or left_cell.terrain_type == 'wall' and not right_cell or right_cell.terrain_type == 'wall')) or ((left_cell and left_cell.terrain_type == 'path' and right_cell and right_cell.terrain_type == 'path') and (not up_cell or up_cell.terrain_type == 'wall' and not down_cell or down_cell.terrain_type == 'wall')):
 			return False
 		return True

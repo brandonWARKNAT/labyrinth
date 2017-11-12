@@ -24,8 +24,8 @@ class LabyrinthController(BaseController):
         Controller for Labyrint and Cells creation
     """
 
-    @expose('json')
-    def breadth_first_search(self, **kw):
+    @expose()
+    def solve_algorithm(self, *args, **kw):
         """ - Solving By Breadth First Search -
            How we will make it to look animated? Well, the only thing I have in mind is
            each time the algorithm reaches a node, redirect to /. Pasing a parameter
@@ -35,7 +35,7 @@ class LabyrinthController(BaseController):
            will work"""
 
         # 
-        log.debug("Keywords: ", kw)
+        log.debug("Keywords: %s" % kw)
 
         # Beggining has been already added as a node, and the ending.
 
@@ -47,69 +47,53 @@ class LabyrinthController(BaseController):
         # First step ordenate the priorities
 
         priorities = list()
-        
+        print("Contents in queue: %s", g.BREADTH_NODE_QUEUE)
+
         if not len(g.BREADTH_NODE_QUEUE):
-            print("It is suposed I've entered Here :D");
             begin_cell = Cell.get_beggining()
             begin_cell.set_cell_class('search')
 
             g.BREADTH_NODE_QUEUE.append(begin_cell)
 
         # Convert dict values to int, and then append to list its key acording to int weight
-        
-        if int(kw.get('up_priority')) == 1:
-            priorities.append('up')
-        elif int(kw.get('down_priority')) == 1:
-            priorities.append('down')
-        elif int(kw.get('left_priority')) == 1: 
-            priorities.append('left' )
-        elif int(kw.get('right_priority')) == 1: 
-            priorities.append('right')
+        priorities = getPriorities(kw)
+    
 
-        if int(kw.get('up_priority')) == 2:
-            priorities.append('up')
-        elif int(kw.get('down_priority')) == 2:
-            priorities.append('down')
-        elif int(kw.get('left_priority')) == 2: 
-            priorities.append('left' )
-        elif int(kw.get('right_priority')) == 2: 
-            priorities.append('right')
+        for c_node in g.BREADTH_NODE_QUEUE:
 
-        if int(kw.get('up_priority')) == 3:
-            priorities.append( 'up')
-        elif int(kw.get('down_priority')) == 3:
-            priorities.append( 'down')
-        elif int(kw.get('left_priority')) == 3: 
-            priorities.append( 'left' )
-        elif int(kw.get('right_priority')) == 3: 
-            priorities.append( 'right')
-
-        if int(kw.get('up_priority')) == 4:
-            priorities.append('up')
-        elif int(kw.get('down_priority')) == 4:
-            priorities.append('down')
-        elif int(kw.get('left_priority')) == 4: 
-            priorities.append('left' )
-        elif int(kw.get('right_priority')) == 4: 
-            priorities.append('right')
-        
-        for c_node in g.BREADTH_NODE_QUEUE: 
             from_x = c_node.coordinate_x
             from_y = c_node.coordinate_y
+            
+            print("From X: %s" % from_x)
+            print("From X: %s" % from_y)
+
+            c_node.has_entity = False
+
             g.BREADTH_NODE_QUEUE.remove(c_node)
 
             # once ordered, iterate over priorities: 
             for p in priorities:
+                new_cell = None
                 try:
                     new_cell = move(p, from_x, from_y)
+
+                    print("New cell found:  %s" % new_cell)
+                    
+                    # Checking cell has not been visited
                     new_cell.set_nearby_cells_unfoggy()
                     new_cell.set_cell_class('search')
-                    g.BREADTH_NODE_QUEUE.append(new_cell)
-                except Exception as e:
-                    pass
-    
+                    new_cell.has_entity = True
+                    
+                    if not new_cell.is_visited: 
+                        g.BREADTH_NODE_QUEUE.append(new_cell)
+                        new_cell.is_visited = True
 
-        redirect('/')
+                except Exception as e:
+                    print("Error: %s", e)
+        
+        print("Este es el nuevo valor de la cola %s" % g.BREADTH_NODE_QUEUE)
+
+        redirect('/', params={"name":"hola"})
 
 
     @expose('json')
@@ -126,7 +110,7 @@ class LabyrinthController(BaseController):
 
 
         if begin_cell.terrain_type == 'wall':
-            return dict(status=500, detail="No puedes inciar en muro")
+            return dict(status=500, detail="No puedes iniciar en muro")
         else:
             begin_cell.is_visited = True
             begin_cell.is_beginning = True

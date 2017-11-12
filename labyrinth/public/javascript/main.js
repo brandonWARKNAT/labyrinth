@@ -101,7 +101,7 @@ Labyrinth.prototype.initListeners = function(e){
 	$("#select-path-beginning").on('click', this.setPathBeginning.bind(this));
 	$("#select-path-ending").on('click', this.setPathEnding.bind(this));
 	$(".move-control").on('click', this.move.bind(this));
-	$(".solve-algorithm").on('click', this.solveAlgorithm.bind(this));
+	// $(".solve-algorithm").on('click', this.solveAlgorithm.bind(this));
 }
 
 $(document).ready(function(){

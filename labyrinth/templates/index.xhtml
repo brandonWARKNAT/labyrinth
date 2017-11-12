@@ -6,31 +6,31 @@
     <body py:block="body" py:strip="True">
       <div class="row">
         <div class="col-md-3 hidden-xs hidden-sm">
-          <form id="autosolve-by-algorithm">
+          <form action="/labyrinth/solve_algorithm" id="autosolve-by-algorithm">
             <legend>Resolver automaticamente el Laberinto</legend>
             <span>Indica la prioridad en que se realizará la búsqueda [0 - 4] </span>    
             <div class="form-group">
               <div class="row">
                 <div class="col-md-3">
                   <div class="text-center">${h.icon('arrow-left')}</div>
-                  <input id="left-priority" type="number" max="4" min="1" class="form-control arrow-input"/>
+                  <input id="left-priority" name="left-priority" type="number" required="required" max="4" min="1" class="form-control arrow-input"/>
                 </div>
                 <div class="col-md-3">
                   <div class="text-center">${h.icon('arrow-right')}</div>
-                  <input id="right-priority" type="number" max="4" min="1" class="form-control arrow-input"/>
+                  <input id="right-priority" name="right-priority" type="number" required="required" max="4" min="1" class="form-control arrow-input"/>
                 </div>
                 <div class="col-md-3">
                   <div class="text-center">${h.icon('arrow-up')}</div>
-                  <input id="up-priority" type="number" max="4" min="1" class="form-control arrow-input"/>
+                  <input id="up-priority" name="up-priority" type="number" required="required" max="4" min="1" class="form-control arrow-input"/>
                 </div>
                 <div class="col-md-3">
                   <div class="text-center">${h.icon('arrow-down')}</div>
-                  <input id="down-priority" type="number" max="4" min="1" class="form-control arrow-input"/>
+                  <input id="down-priority" name="down-priority" type="number" required="required" max="4" min="1" class="form-control arrow-input"/>
                 </div>
               </div>
             </div> 
             <div class="form-group">
-              <button value="breadth-first-search" class="btn btn-primary btn-block solve-algorithm">Breadth-First Search</button>
+              <button value="breadth-first-search" name="algorithm" class="btn btn-primary btn-block solve-algorithm">Breadth-First Search</button>
             </div>        
           </form>
         </div>

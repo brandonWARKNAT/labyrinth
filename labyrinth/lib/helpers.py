@@ -33,6 +33,47 @@ def ending_has_been_set():
         return True
     return False
 
+def getPriorities(kw):
+    aux = list()
+    
+    if int(kw.get('up-priority')) == 1:
+        aux.append('up')
+    elif int(kw.get('down-priority')) == 1:
+        aux.append('down')
+    elif int(kw.get('left-priority')) == 1: 
+        aux.append('left' )
+    elif int(kw.get('right-priority')) == 1: 
+        aux.append('right')
+
+    if int(kw.get('up-priority')) == 2:
+        aux.append('up')
+    elif int(kw.get('down-priority')) == 2:
+        aux.append('down')
+    elif int(kw.get('left-priority')) == 2: 
+        aux.append('left' )
+    elif int(kw.get('right-priority')) == 2: 
+        aux.append('right')
+
+    if int(kw.get('up-priority')) == 3:
+        aux.append( 'up')
+    elif int(kw.get('down-priority')) == 3:
+        aux.append( 'down')
+    elif int(kw.get('left-priority')) == 3: 
+        aux.append( 'left' )
+    elif int(kw.get('right-priority')) == 3: 
+        aux.append( 'right')
+
+    if int(kw.get('up-priority')) == 4:
+        aux.append('up')
+    elif int(kw.get('down-priority')) == 4:
+        aux.append('down')
+    elif int(kw.get('left-priority')) == 4: 
+        aux.append('left' )
+    elif int(kw.get('right-priority')) == 4: 
+        aux.append('right')
+
+    return aux
+
 def create_labyrinth():
 
     with open(resources_dirname + '/' + filename, 'r') as file:
@@ -65,6 +106,8 @@ def isDirectionAInverseB(A, B):
 def move(direction, from_x, from_y):
     new_x = None
     new_y = None
+
+
     if direction == 'up':
         cell = Cell.get_cell(from_x, from_y - 1)
         new_x = from_x
@@ -89,11 +132,16 @@ def move(direction, from_x, from_y):
         if cell.terrain_type == 'wall':
             raise Exception("You cant travel through wall")
 
-    if cell.check_if_cell_is_node():
-        return cell
-    else: 
-        # if cell is not a node: 
-        move(direction, new_x, from_y)
+        cell.set_cell_class("search")
+        cell.set_nearby_cells_unfoggy()
+
+        if cell.check_if_cell_is_node():
+            return cell
+        else: 
+            # if cell is not a node: 
+           return move(direction, new_x, from_y)
+    else:
+        print("No encontre celda")
     
 
 def configureTreeCell(cell):
