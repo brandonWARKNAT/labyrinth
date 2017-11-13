@@ -34,7 +34,7 @@
             </div>        
           </form>
         </div>
-        <div class="col-md-7">
+        <div class="col-md-6">
           <div class="jumbotron">
             <table>
               <th py:for="c, item in enumerate(g.LABYRINTH)" class="labyrinth-cell text-center">${c}</th>
@@ -42,7 +42,7 @@
                 <tr>
                   <py:for each="cell in row">
                     <td data-coordinate-x="${cell.coordinate_x}" data-coordinate-y="${cell.coordinate_y}" class="text-center labyrinth-cell ${'ending' if cell.is_end else ''} ${cell.terrain_type} ${'foggy' if cell.has_fog else ''} ${'current-position' if cell.has_entity else ''} ${cell.clazz}">
-                      <i class="text-white glyphicon glyphicon-user" py:if="cell.has_entity"></i> 
+                      <small py:if="cell.has_entity"><i  class="text-white glyphicon glyphicon-user" ></i></small>
                     </td>
                   </py:for>
                 </tr>
@@ -50,16 +50,16 @@
             </table>
           </div>
         </div>
-        <div class="col-md-2 hidden-xs hidden-sm">
+        <div class="col-md-3 hidden-xs hidden-sm">
           <form id="beginning-form">
             <legend>Selecciona la coordenada inicio:</legend>
             <div class="form-group">
               <label for="">Coordenada en X</label>
-              <input class="from-control" type="text" name="x-coordinate" id="" placeholder="" />
+              <input class="from-control" type="number" step="1" name="x-coordinate" id="" placeholder="" />
             </div>
             <div class="form-group">
               <label for="">Coordenada en Y</label>
-              <input class="from-control" type="text" name="y-coordinate" id="" placeholder="" />
+              <input class="from-control" type="number" step="1" name="y-coordinate" id="" placeholder="" />
             </div>
             <div class="form-group">
               <button class="btn btn-primary btn-block" id="select-path-beginning">Seleccionar</button>
@@ -70,11 +70,11 @@
             <legend>Selecciona la coordenada final: </legend>
             <div class="form-group">
               <label for="">Coordenada en X</label>
-              <input type="text" name="x-coordinate" placeholder="" />
+              <input type="number" step="1" name="x-coordinate" placeholder="" />
             </div>
             <div class="form-group">
               <label for="">Coordenada en Y</label>
-              <input type="text" name="y-coordinate" placeholder="" />
+              <input type="number" step="1" name="y-coordinate" placeholder="" />
             </div>
             <div class="form-group">
               <button class="btn btn-primary" id="select-path-ending">Seleccionar</button>

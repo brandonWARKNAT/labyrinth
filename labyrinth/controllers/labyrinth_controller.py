@@ -7,12 +7,17 @@ from labyrinth.lib.tree_manager import Tree
 from labyrinth.lib.helpers import * 
 from tg import app_globals as g
 
+import sys
+
 __all__ = ['LabyrinthController']
 
 # Then i need to implement the algorithms :v
 """
     First we need to create a list that will contain queued nodes
 """
+
+sys.setrecursionlimit(1500)
+
 
 import logging
 log = logging.getLogger(__name__)
@@ -59,7 +64,7 @@ class LabyrinthController(BaseController):
         priorities = getPriorities(kw)
     
 
-        for c_node in g.BREADTH_NODE_QUEUE:
+        for c_node in g.BREADTH_NODE_QUEUE[:]:
 
             from_x = c_node.coordinate_x
             from_y = c_node.coordinate_y
@@ -82,11 +87,11 @@ class LabyrinthController(BaseController):
                     # Checking cell has not been visited
                     new_cell.set_nearby_cells_unfoggy()
                     new_cell.set_cell_class('search')
-                    new_cell.has_entity = True
                     
                     if not new_cell.is_visited: 
                         g.BREADTH_NODE_QUEUE.append(new_cell)
                         new_cell.is_visited = True
+                        new_cell.has_entity = True
 
                 except Exception as e:
                     print("Error: %s", e)

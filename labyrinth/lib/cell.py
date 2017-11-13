@@ -45,11 +45,34 @@ class Cell(object):
 		down_cell = Cell.get_cell(self.coordinate_x, self.coordinate_y + 1)
 
 		left_cell = Cell.get_cell(self.coordinate_x - 1, self.coordinate_y)
+
+		# La celda es no es un nodo si:
+		is_node = list()
 		
-		# 1									False																#2False
-		if ((up_cell and up_cell.terrain_type == 'path' and down_cell and down_cell.terrain_type == 'path') and (not left_cell or left_cell.terrain_type == 'wall' and not right_cell or right_cell.terrain_type == 'wall')) or ((left_cell and left_cell.terrain_type == 'path' and right_cell and right_cell.terrain_type == 'path') and (not up_cell or up_cell.terrain_type == 'wall' and not down_cell or down_cell.terrain_type == 'wall')):
-			return False
-		return True
+		# La de arriba es camino y la de abajo es camino
+		if (up_cell and up_cell.terrain_type == "path") and (down_cell and down_cell.terrain_type == "path"):
+			# Y a su vez, la de la izquiera debe ser muro y la de la derecha también para que no sea nodo
+			if (not left_cell or left_cell.terrain_type == "wall") and (not right_cell or right_cell.terrain_type == "wall"):
+				is_node.append(False)
+			else:
+				is_node.append(True)
+		else:
+			is_node.append(True)
+
+		# La de la izquirda y derecha son camino
+		if (left_cell and left_cell.terrain_type == "path") and (right_cell and right_cell.terrain_type == "path"):
+			# Para comprobar que la de arriba y abajo sean muro
+			if (not up_cell or up_cell.terrain_type == "wall") and (not down_cell or down_cell.terrain_type == "wall"):
+				is_node.append(False)
+			else:
+				is_node.append(True)
+		else:
+			is_node.append(True)
+			
+		print("Node: %s", is_node)
+
+		return all(is_node)
+
 
 	def set_cell_class(self, clazz):
 		self.clazz = clazz

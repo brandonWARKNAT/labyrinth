@@ -106,8 +106,7 @@ def isDirectionAInverseB(A, B):
 def move(direction, from_x, from_y):
     new_x = None
     new_y = None
-
-
+    
     if direction == 'up':
         cell = Cell.get_cell(from_x, from_y - 1)
         new_x = from_x
@@ -135,13 +134,12 @@ def move(direction, from_x, from_y):
         cell.set_cell_class("search")
         cell.set_nearby_cells_unfoggy()
 
+
         if cell.check_if_cell_is_node():
             return cell
         else: 
             # if cell is not a node: 
-           return move(direction, new_x, from_y)
-    else:
-        print("No encontre celda")
+           return move(direction, new_x, new_y)
     
 
 def configureTreeCell(cell):
