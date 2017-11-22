@@ -20,6 +20,8 @@ class Globals(object):
 
     BREADTH_NODE_QUEUE = list()
 
+    DEPTH_NODE_QUEUE = list()
+
     def __init__(self):
         """Do nothing, by default."""
         pass

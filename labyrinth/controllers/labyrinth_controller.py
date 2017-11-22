@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Cell controller"""
-from tg import request, expose, redirect
+from tg import request, expose, redirect, flash
 from labyrinth.lib.base import BaseController
 from labyrinth.lib.cell import Cell
 from labyrinth.lib.tree_manager import Tree
@@ -39,66 +39,109 @@ class LabyrinthController(BaseController):
            we need to redirect to this action. Yeah, is something weird but I think it 
            will work"""
 
+
         # 
         log.debug("Keywords: %s" % kw)
 
-        # Beggining has been already added as a node, and the ending.
-
-        # Travel from nX to zY with a given priority
-
-        # How about ordering priorities in a list and then iterate over them, in the ui each cell visited
-        # will be marked with another color to show how the algorithm travelled
-
-        # First step ordenate the priorities
+        algorithm = kw.get("algorithm")
 
         priorities = list()
-        print("Contents in queue: %s", g.BREADTH_NODE_QUEUE)
-
-        if not len(g.BREADTH_NODE_QUEUE):
-            begin_cell = Cell.get_beggining()
-            begin_cell.set_cell_class('search')
-
-            g.BREADTH_NODE_QUEUE.append(begin_cell)
 
         # Convert dict values to int, and then append to list its key acording to int weight
         priorities = getPriorities(kw)
-    
 
-        for c_node in g.BREADTH_NODE_QUEUE[:]:
+        if algorithm == "breadth-first-search":
 
-            from_x = c_node.coordinate_x
-            from_y = c_node.coordinate_y
+            # Beggining has been already added as a node, and the ending.
+
+            # Travel from nX to zY with a given priority
+
+            # How about ordering priorities in a list and then iterate over them, in the ui each cell visited
+            # will be marked with another color to show how the algorithm travelled
+
+            # First step ordenate the priorities
+
             
-            print("From X: %s" % from_x)
-            print("From X: %s" % from_y)
+            if not len(g.BREADTH_NODE_QUEUE):
+                begin_cell = Cell.get_beggining()
+                begin_cell.set_cell_class('search')
 
-            c_node.has_entity = False
+                g.BREADTH_NODE_QUEUE.append(begin_cell)
 
-            g.BREADTH_NODE_QUEUE.remove(c_node)
+            for c_node in g.BREADTH_NODE_QUEUE[:]:
 
-            # once ordered, iterate over priorities: 
-            for p in priorities:
-                new_cell = None
-                try:
-                    new_cell = move(p, from_x, from_y)
+                from_x = c_node.coordinate_x
+                from_y = c_node.coordinate_y
 
-                    print("New cell found:  %s" % new_cell)
-                    
-                    # Checking cell has not been visited
-                    new_cell.set_nearby_cells_unfoggy()
-                    new_cell.set_cell_class('search')
-                    
-                    if not new_cell.is_visited: 
-                        g.BREADTH_NODE_QUEUE.append(new_cell)
-                        new_cell.is_visited = True
-                        new_cell.has_entity = True
+                c_node.has_entity = False
 
-                except Exception as e:
-                    print("Error: %s", e)
+                g.BREADTH_NODE_QUEUE.remove(c_node)
+
+                # once ordered, iterate over priorities: 
+                for p in priorities:
+                    new_cell = None
+                    try:
+                        new_cell = move(p, from_x, from_y)
+
+                        # Checking cell has not been visited
+                        new_cell.set_nearby_cells_unfoggy()
+                        new_cell.set_cell_class('search')
+                        
+                        if not new_cell.is_visited: 
+                            g.BREADTH_NODE_QUEUE.append(new_cell)
+                            new_cell.is_visited = True
+                            new_cell.has_entity = True
+
+                    except Exception as e:
+                        print("Error: %s", e)
+
+            redirect('/', params={"name":"hola"})
         
-        print("Este es el nuevo valor de la cola %s" % g.BREADTH_NODE_QUEUE)
+        elif algorithm == "depth-first-search":
+            """ A diferencia de breadth, en dept nos seguimos por un camino hasta recorrer todos su nodos
+                Se me ocurre iterando por prioridades y agregando a la cola todos con un estado de abierto, 
+                si se itera hacia todas las direcciones y no se encuentra nada se sube hacía el siguiente elemento de la cola
 
-        redirect('/', params={"name":"hola"})
+            """
+            aux = False
+
+            current_cell = None
+            
+            begin_cell = Cell.get_beggining()
+            
+            if begin_cell not in g.DEPTH_NODE_QUEUE:
+                g.DEPTH_NODE_QUEUE.append(begin_cell)
+
+            while aux == False:
+                # travel in valid directions
+                for p in priorities:
+                    try:
+                        new_cell = None
+                        
+                        if current_cell == None:
+                            if len(g.DEPTH_NODE_QUEUE):
+                                current_cell = g.DEPTH_NODE_QUEUE[-1]
+                                current_cell.set_cell_class('search')
+
+                        new_cell = move(p, current_cell.coordinate_x, current_cell.coordinate_y)
+
+                        if not new_cell.is_visited:
+                            g.DEPTH_NODE_QUEUE.append(new_cell)
+                            new_cell.is_visited = True
+                            new_cell.has_entity = True
+                            aux = True
+                    except Exception as e:
+                        print("Error on depth: %s", e)
+                
+                if len(g.DEPTH_NODE_QUEUE):
+                    current_cell = g.DEPTH_NODE_QUEUE[-1]
+                    g.DEPTH_NODE_QUEUE.remove(current_cell)
+                        
+
+            redirect('/', params={"name":"hola"})
+
+
+            
 
 
     @expose('json')
