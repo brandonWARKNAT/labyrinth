@@ -103,42 +103,48 @@ class LabyrinthController(BaseController):
                 si se itera hacia todas las direcciones y no se encuentra nada se sube hacía el siguiente elemento de la cola
 
             """
+            params = dict()
+
             aux = False
 
             current_cell = None
             
             begin_cell = Cell.get_beggining()
             
-            if begin_cell not in g.DEPTH_NODE_QUEUE:
+            if not kw.get("begin_set"):
                 g.DEPTH_NODE_QUEUE.append(begin_cell)
+            
+            params["begin_set"] = True
 
-            while aux == False:
-                # travel in valid directions
-                for p in priorities:
-                    try:
-                        new_cell = None
-                        
-                        if current_cell == None:
-                            if len(g.DEPTH_NODE_QUEUE):
-                                current_cell = g.DEPTH_NODE_QUEUE[-1]
-                                current_cell.set_cell_class('search')
 
-                        new_cell = move(p, current_cell.coordinate_x, current_cell.coordinate_y)
+            for p in priorities:
+                try:
+                    new_cell = None
+                    
+                    if current_cell == None:
+                        if len(g.DEPTH_NODE_QUEUE):
+                            current_cell = g.DEPTH_NODE_QUEUE[-1]
+                            current_cell.set_cell_class('search')
 
-                        if not new_cell.is_visited:
-                            g.DEPTH_NODE_QUEUE.append(new_cell)
-                            new_cell.is_visited = True
-                            new_cell.has_entity = True
-                            aux = True
-                    except Exception as e:
-                        print("Error on depth: %s", e)
-                
+                    new_cell = move(p, current_cell.coordinate_x, current_cell.coordinate_y)
+
+                    if not new_cell.is_visited:
+                        new_cell.is_visited = True
+                        new_cell.has_entity = True
+                        g.DEPTH_NODE_QUEUE.append(new_cell)
+                        aux = True
+                        break
+
+    
+                except Exception as e:
+                    print("Error on depth: %s", e)
+            
+            if aux == False:
                 if len(g.DEPTH_NODE_QUEUE):
-                    current_cell = g.DEPTH_NODE_QUEUE[-1]
                     g.DEPTH_NODE_QUEUE.remove(current_cell)
-                        
+                    
 
-            redirect('/', params={"name":"hola"})
+            redirect('/', params=params)
 
 
             

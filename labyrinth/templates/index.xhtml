@@ -7,6 +7,7 @@
       <div class="row">
         <div class="col-md-3 hidden-xs hidden-sm">
           <form action="/labyrinth/solve_algorithm" id="autosolve-by-algorithm">
+            <input name="begin_set" type="hidden" value="true" py:if="request.GET.get('begin_set')"/>
             <legend>Resolver automaticamente el Laberinto</legend>
             <span>Indica la prioridad en que se realizará la búsqueda [0 - 4] </span>    
             <div class="form-group">
